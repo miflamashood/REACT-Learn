@@ -1,6 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import AddOption from './components/AddOption.js';
+// stateless functional component
+
 class IndecisionApp extends React.Component {
     constructor(props) {
         super(props);
@@ -24,13 +23,13 @@ class IndecisionApp extends React.Component {
         }
         catch (e) {
 
-        }
+        }       
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.options.length !== this.state.options.length) {
+        if (prevState.options.length!==this.state.options.length) {
             const json = JSON.stringify(this.state.options);
-            localStorage.setItem('options', json);
+            localStorage.setItem('options',json);
         }
     }
 
@@ -116,7 +115,7 @@ const Options = (props) => {
     return (
         <div>
             <button onClick={props.handleDeleteOptions}>Remove All</button>
-            {props.options.length === 0 && <p>Please add an option to get started !</p>}
+            {props.options.length===0 && <p>Please add an option to get started !</p>}
             {
                 props.options.map((option) => (
                     <Option
@@ -145,7 +144,36 @@ const Option = (props) => {
     );
 };
 
+class AddOption extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleAddOption = this.handleAddOption.bind(this);
+        this.state = {
+            error: undefined
+        };
+    }
+    handleAddOption(e) {
+        e.preventDefault();
 
+        const option = e.target.elements.option.value.trim();
+        const error = this.props.handleAddOption(option);
+
+        this.setState(() => ({ error }));
+        if (!error)
+            e.target.elements.option.value = '';
+    }
+    render() {
+        return (
+            <div>
+                {this.state.error && <p>{this.state.error}</p>}
+                <form onSubmit={this.handleAddOption}>
+                    <input type="text" name="option" />
+                    <button>Add Option</button>
+                </form>
+            </div>
+        );
+    }
+}
 
 // const User = (props) => {
 //   return (
